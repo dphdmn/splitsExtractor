@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Splits Table</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      display: flex;
+      height: 100vh;
+    }
+
+    textarea {
+      width: 25%;
+      padding: 10px;
+      font-size: 1rem;
+      border: none;
+      outline: none;
+      resize: none;
+      white-space: nowrap;
+      overflow-x: auto;
+      overflow-y: auto;
+    }
+
+    #output {
+      width: 75%;
+      padding: 10px;
+      overflow: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    td, th {
+      border: 1px solid #ccc;
+      padding: 4px 8px;
+      text-align: left;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+  <textarea id="input" placeholder="Paste solve data here..."></textarea>
+  <div id="output">
+    <table id="resultTable">
+      <tbody></tbody>
+    </table>
+  </div>
+  <script src="pako.js"></script>
+  <script src="splits.js"></script>
+  
+  <script>
+    const input = document.getElementById('input');
+    const tableBody = document.querySelector('#resultTable tbody');
+
+    function updateTable() {
+      const lines = input.value.split('\n').filter(line => line.trim() !== '');
+      tableBody.innerHTML = ''; // clear previous rows
+
+      for (const line of lines) {
+        const rawSplits = splits(line); // assumed to return array of comma-separated strings or raw string
+        const values = rawSplits.join(',').split(','); // flatten and split by commas
+        const tr = document.createElement('tr');
+        for (const val of values) {
+          const td = document.createElement('td');
+          td.textContent = val.trim();
+          tr.appendChild(td);
+        }
+        tableBody.appendChild(tr);
+      }
+    }
+
+    input.addEventListener('input', updateTable);
+  </script>
+</body>
+</html>
